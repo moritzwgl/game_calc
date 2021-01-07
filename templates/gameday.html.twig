@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <div class="wrapper">
+        {{ parent() }}
+        <!-- Main section-->
+        <section class="section-container">
+            <!-- Page content-->
+            <div class="content-wrapper">
+                <div class="content-heading">
+                    <div>1. Bundesliga</div>
+                </div>
+                <div class="container-fluid">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">{{ gameday }}. Spieltag</div>
+                        </div>
+                        <div class="card-body">
+                            <div id="datatable1_wrapper"
+                                 class="dataTables_wrapper dt-bootstrap4 no-footer">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <table class="table table-striped my-4 w-100 dataTable no-footer dtr-inline"
+                                               id="datatable1" role="grid"
+                                               aria-describedby="datatable1_info"
+                                               style="width: 1831px;">
+                                            <thead>
+                                            <tr role="row">
+                                                <th data-priority="1" class="sorting_asc" tabindex="0"
+                                                    aria-controls="datatable1" rowspan="1" colspan="1"
+                                                    style="width: 253px;" aria-sort="ascending"
+                                                    aria-label="Engine: activate to sort column descending">
+                                                    Home
+                                                </th>
+                                                <th class="sorting" tabindex="0"
+                                                    aria-controls="datatable1" rowspan="1" colspan="1"
+                                                    style="width: 446px;"
+                                                    aria-label="Browser: activate to sort column ascending">
+                                                    Away
+                                                </th>
+                                                <th class="sorting" tabindex="0"
+                                                    aria-controls="datatable1" rowspan="1" colspan="1"
+                                                    style="width: 414px;"
+                                                    aria-label="Platform(s): activate to sort column ascending">
+                                                    Result
+                                                </th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for game in games %}
+                                                <tr role="row">
+                                                    <td tabindex="0" class="sorting_1"><a
+                                                                href="{{ path('team', {team: game.home}) }}">{{ game.home }}</a>
+                                                    </td>
+                                                    <td tabindex="0" class="sorting_1"><a
+                                                                href="{{ path('team', {team: game.away}) }}">{{ game.away }}</a>
+                                                    </td>
+                                                    <td tabindex="0" class="sorting_1">{{ game.result }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section><!-- Page footer-->
+        <footer class="footer-container"><span>&copy; 2020 - Angle</span></footer>
+    </div>
+{% endblock %}

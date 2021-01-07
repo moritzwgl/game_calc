@@ -1,0 +1,180 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <div class="wrapper">
+        {{ parent() }}
+        <!-- Main section-->
+        <section class="section-container">
+            <!-- Page content-->
+            <div class="content-wrapper">
+                <div class="content-heading">
+                    <div>{{ team }}</div><!-- START Language list-->
+                </div><!-- START cards box-->
+                <div class="row">
+                    <div class="col-xl-4 col-md-8">
+                        <!-- START card-->
+                        <div class="card flex-row align-items-center align-items-stretch border-0">
+                            <div class="col-4 py-2 bg-success rounded-right">
+                                <div class="h2 mt-0">{{ stats.wins }}</div>
+                                <div class="text-uppercase">Siege</div>
+                            </div>
+                            <div class="col-4 py-2 bg-warning rounded-right">
+                                <div class="h2 mt-0">{{ stats.draws }}</div>
+                                <div class="text-uppercase">Unentschieden</div>
+                            </div>
+                            <div class="col-4 py-2 bg-danger rounded-right">
+                                <div class="h2 mt-0">{{ stats.looses }}</div>
+                                <div class="text-uppercase">Niederlagen</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-5 col-lg-6 col-md-12">
+                        <!-- START card-->
+                        <div class="card flex-row align-items-center align-items-stretch border-0">
+
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-6 col-md-12">
+                        <!-- START date widget-->
+                        <div class="card flex-row align-items-center align-items-stretch border-0">
+                            <div class="col-4 d-flex align-items-center bg-green justify-content-center rounded-left">
+                                <div class="text-center">
+                                    <!-- See formats: https://docs.angularjs.org/api/ng/filter/date-->
+                                    <div class="text-sm" data-now="" data-format="MMMM"></div>
+                                    <br>
+                                    <div class="h2 mt-0" data-now="" data-format="D"></div>
+                                </div>
+                            </div>
+                            <div class="col-8 py-3 rounded-right">
+                                <div class="text-uppercase" data-now="" data-format="dddd"></div>
+                                <br>
+                                <div class="h2 mt-0" data-now="" data-format="H:mm"></div>
+                                <small class="text-muted text-sm">Uhr</small>
+                            </div>
+                        </div><!-- END date widget-->
+                    </div>
+                </div><!-- END cards box-->
+                <div class="row">
+                    <!-- START dashboard main content-->
+                    <div class="col-xl-9">
+                        <!-- START chart-->
+                        <div class="row">
+                            <div class="col-xl-12">
+                                <!-- START card-->
+                                <div class="card card-default card-demo" id="cardChart9">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <div class="card-title">1. Bundesliga - Spiele</div>
+                                        </div>
+                                        <div class="card-body">
+                                            <div id="datatable1_wrapper"
+                                                 class="dataTables_wrapper dt-bootstrap4 no-footer">
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <table class="table table-striped my-4 w-100 dataTable no-footer dtr-inline"
+                                                               id="datatable1" role="grid"
+                                                               aria-describedby="datatable1_info"
+                                                               style="width: 1831px;">
+                                                            <thead>
+                                                            <tr role="row">
+                                                                <th data-priority="1" class="sorting_asc" tabindex="0"
+                                                                    aria-controls="datatable1" rowspan="1" colspan="1"
+                                                                    style="width: 253px;" aria-sort="ascending">
+                                                                    Spieltag
+                                                                </th>
+                                                                <th data-priority="1" tabindex="0"
+                                                                    aria-controls="datatable1" rowspan="1" colspan="1"
+                                                                    style="width: 253px;">
+                                                                    Home
+                                                                </th>
+                                                                <th class="sorting" tabindex="0"
+                                                                    aria-controls="datatable1" rowspan="1" colspan="1"
+                                                                    style="width: 446px;">
+                                                                    Away
+                                                                </th>
+                                                                <th class="sorting" tabindex="0"
+                                                                    aria-controls="datatable1" rowspan="1" colspan="1"
+                                                                    style="width: 446px;">
+                                                                    Result
+                                                                </th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            {% for game in games %}
+                                                                {% if game.result == true %}
+                                                                    <tr role="row">
+                                                                        <td tabindex="0"
+                                                                            class="sorting_1">{{ game.gameday }}.
+                                                                        </td>
+                                                                        <td tabindex="0"
+                                                                            class="sorting_1"><a
+                                                                                    href="{{ path('team', {team: game.home}) }}">{{ game.home }}</a>
+                                                                        </td>
+                                                                        <td tabindex="0"
+                                                                            class="sorting_1"><a
+                                                                                    href="{{ path('team', {team: game.away}) }}">{{ game.away }}</a>
+                                                                        </td>
+                                                                        <td tabindex="0"
+                                                                            class="sorting_1">{{ game.result }}</td>
+                                                                    </tr>
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div><!-- END card-->
+                            </div>
+                        </div><!-- END chart-->
+                    </div><!-- END dashboard main content-->
+                    <!-- START dashboard sidebar-->
+                    <aside class="col-xl-3">
+                        <!-- START loader widget-->
+                        <div class="card card-default">
+                            <div class="card-body">
+                                <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                                    <div class="carousel-inner">
+                                        <div class="carousel-item active">
+                                            <div class="text-info">Siegwahrscheinlichkeit - Gesamt</div>
+                                            <div class="text-center py-4">
+                                                <div class="easypie-chart easypie-chart-lg" data-easypiechart
+                                                     data-percent="{{ stats.win_percentage }}"
+                                                     data-animate="{&quot;duration&quot;: &quot;800&quot;, &quot;enabled&quot;: &quot;true&quot;}"
+                                                     data-bar-color="#23b7e5" data-track-Color="rgba(200,200,200,0.4)"
+                                                     data-scale-Color="false" data-line-width="10" data-line-cap="round"
+                                                     data-size="145"><span>{{ stats.win_percentage }}%</span></div>
+                                            </div>
+                                            <div class="text-center" data-sparkline="" data-bar-color="#23b7e5"
+                                                 data-height="30"
+                                                 data-bar-width="5" data-bar-spacing="2"
+                                                 data-values="10,0,6,10,10,8,7,5,9,5,5,8,8,10"></div>
+                                        </div>
+                                    </div>
+                                    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button"
+                                       data-slide="prev">
+                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                        <span class="sr-only">Previous</span>
+                                    </a>
+                                    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button"
+                                       data-slide="next">
+                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                        <span class="sr-only">Next</span>
+                                    </a>
+                                </div>
+
+                            </div>
+                            <div class="card-footer">
+                                <p class="text-muted"><a href="https://en.wikipedia.org/wiki/Winning_percentage"
+                                                         target="_blank" rel="noopener"><i
+                                                class="fab fa-wikipedia-w"></i></a></p>
+                            </div>
+                        </div><!-- END loader widget-->
+                    </aside><!-- END dashboard sidebar-->
+                </div>
+            </div>
+        </section><!-- Page footer-->
+        <footer class="footer-container"><span></span></footer>
+    </div>
+{% endblock %}
