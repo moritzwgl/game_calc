@@ -5,11 +5,60 @@ namespace App\Service;
 use App\Crawler\Crawler;
 use App\Entity\Gameday;
 use App\Entity\Games;
+use App\Entity\Teams;
+use App\Entity\TeamStats;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class GamedayService extends AbstractController
 {
+
+	//Speichert ein Array mit Teams in die Datenbank
+	public function saveTeams($teams) {
+
+		$entityManager = $this->getDoctrine()->getManager();
+
+		foreach ($teams as $team) {
+
+			$teams_entity = new Teams();
+			$teams_entity->setName($team);
+
+			$entityManager->persist($teams_entity);
+			$entityManager->flush();
+		}
+	}
+
+	// Holt sich anhand des Teamnames die team_id aus der Tabelle teams und speichert diese mit den Statistiken in die Tabelle team_stats
+	public function saveTeamStats($teams_stats) {
+
+		$entityManager = $this->getDoctrine()->getManager();
+
+		foreach ($teams_stats as $team_stats) {
+
+			$team_name = $team_stats["team"];
+
+			$team = $this->getDoctrine()
+				->getRepository(Teams::class)
+				->findBy(["name" => $team_name]);
+
+			$team_id = $team[0]->getId();
+
+			$team_stats_entity = new TeamStats();
+
+			$team_stats_entity->setTeamId($team_id);
+			$team_stats_entity->setGames($team_stats["games"]);
+			$team_stats_entity->setWins($team_stats["wins"]);
+			$team_stats_entity->setDraws($team_stats["draws"]);
+			$team_stats_entity->setLooses($team_stats["looses"]);
+			$team_stats_entity->setGoals($team_stats["goals"]);
+			$team_stats_entity->setPoints($team_stats["points"]);
+
+			$entityManager->persist($team_stats_entity);
+			$entityManager->flush();
+		}
+	}
+
+
 	public function saveAllGamedays(Crawler $crawler) {
 
 		$entityManager = $this->getDoctrine()->getManager();
@@ -44,9 +93,9 @@ class GamedayService extends AbstractController
 			}
 
 			$games = new Games();
-			$games->setGameday($gameday);
-			$games->setHome($game["home"]);
-			$games->setAway($game["away"]);
+			$games->setGamedayId($gameday);
+			$games->setHomeId($game["home"]);
+			$games->setAwayId($game["away"]);
 			$games->setResult($result);
 
 			$entityManager->persist($games);
@@ -98,25 +147,31 @@ class GamedayService extends AbstractController
 			->getRepository(Gameday::class)
 			->findBy(["date" => $current_date]);
 
+		/*
 		if (!$gameday) {
 			throw $this->createNotFoundException(
 				'No gameday found with date ' . $current_date
 			);
 		}
+		*/
 
-		$gameday = end($gameday)->getGameday();
+		if (empty($gameday)) {
+			return $gameday;
+		} else {
+			$gameday = end($gameday)->getGameday();
 
-		$games = $this->getDoctrine()
-			->getRepository(Games::class)
-			->findBy(["gameday" => $gameday]);
+			$games = $this->getDoctrine()
+				->getRepository(Games::class)
+				->findBy(["gameday" => $gameday]);
 
-		if (!$games) {
-			throw $this->createNotFoundException(
-				'No games found with gameday ' . $gameday
-			);
+			if (!$games) {
+				throw $this->createNotFoundException(
+					'No games found with gameday ' . $gameday
+				);
+			}
+
+			return $games;
 		}
-
-		return $games;
 	}
 
 	public function getGamesByTeam($team) {

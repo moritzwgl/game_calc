@@ -107,16 +107,24 @@
                                                             </tr>
                                                             </thead>
                                                             <tbody>
+                                                            {% if games is empty %}
+                                                            <p>Es wurden keine Spiele in der Datenbank gefunden</p>
+                                                            {% else %}
                                                             {% for game in games %}
                                                                 <tr role="row">
                                                                     <td tabindex="0"
-                                                                        class="sorting_1"><a href="{{ path('team', {team: game.home}) }}">{{ game.home }}</a></td>
+                                                                        class="sorting_1"><a
+                                                                                href="{{ path('team', {team: game.home}) }}">{{ game.home }}</a>
+                                                                    </td>
                                                                     <td tabindex="0"
-                                                                        class="sorting_1"><a href="{{ path('team', {team: game.away}) }}">{{ game.away }}</a></td>
+                                                                        class="sorting_1"><a
+                                                                                href="{{ path('team', {team: game.away}) }}">{{ game.away }}</a>
+                                                                    </td>
                                                                     <td tabindex="0"
                                                                         class="sorting_1">{{ game.result }}</td>
                                                                 </tr>
                                                             {% endfor %}
+                                                            {% endif %}
                                                             </tbody>
                                                         </table>
                                                     </div>

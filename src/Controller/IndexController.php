@@ -68,12 +68,37 @@ class IndexController extends AbstractController
 
 
 	/**
-	 * @Route("/crawl", name="crawl")
+	 * @Route("/crawler/{action}", defaults={"action"=""}, name="crawler")
 	 */
-	public function testAction() {
+	public function crawlerAction($action) {
 
-		$this->gamedayService->saveAllGamedays(new Crawler());
+		$crawler = new Crawler();
 
-		return $this->redirectToRoute('index', [], 301);
+		if ($action === "teams"){
+
+			$table_url = "https://www.sport.de/widget_standing_round-matchday/ro109214/md";
+			$teams = $crawler->crawlTeams($table_url);
+
+			$this->gamedayService->saveTeams($teams);
+
+			return $this->redirectToRoute('crawler', [], 301);
+		}
+
+		if ($action === "teams_stats"){
+
+			$table_url = "https://www.sport.de/widget_standing_round-matchday/ro109214/md";
+			$teams_stats = $crawler->crawlTeamsStats($table_url);
+
+			$this->gamedayService->saveTeamStats($teams_stats);
+
+			return $this->redirectToRoute('crawler', [], 301);
+		}
+
+		if ($action == ""){
+			return $this->render('crawler/crawler.html.twig', [
+				"gamedays" => $this->gamedays,
+				"message" => ""
+			]);
+		}
 	}
 }

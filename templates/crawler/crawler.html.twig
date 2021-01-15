@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <div class="wrapper">
+        {{ parent() }}
+        <section class="section-container">
+            <div class="content-wrapper">
+                <div class="content-heading">
+                    <div>Crawler<small data-localize="dashboard.WELCOME"></small></div>
+                </div>
+                <div class="row">
+                    {% if message is not empty %}
+                        <div class="alert alert-success" role="alert">{{ message }}</div>
+                    {% endif %}
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="card card-default">
+                            <div class="card-header">
+                                <h3 class="card-title">Crawler Funktionen</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="col-xl-6">
+                                    <p>
+                                        <a class="mb-1 btn btn-primary" type="button"
+                                           href="{{ path('crawler', {action: 'teams'}) }}">Teams importieren
+                                        </a>
+                                    </p>
+                                    <p>
+                                        <a class="mb-1 btn btn-primary" type="button"
+                                           href="{{ path('crawler', {action: 'teams_stats'}) }}">Team Statistiken
+                                            importieren
+                                        </a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </section>
+        <footer class="footer-container"><span>&copy; 2020 - Angle</span></footer>
+    </div>
+{% endblock %}

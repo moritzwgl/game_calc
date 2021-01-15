@@ -7,6 +7,43 @@ use KubAT\PhpSimple\HtmlDomParser;
 
 class Crawler
 {
+
+	// Holt sich mithilfe der Tabelle alle Teams und deren Namen
+	function crawlTeams($url){
+
+		$html = HtmlDomParser::file_get_html($url);
+		$rows = $html->find('.standing');
+
+		foreach ($rows as $row){
+			$teams[] = $row->find('.team-name a', 0)->plaintext;
+		}
+
+		return $teams;
+	}
+
+	// Holt sich mithilfe der Tabelle alle Statistiken der Teams
+	function crawlTeamsStats($url) {
+
+		$html = HtmlDomParser::file_get_html($url);
+		$rows = $html->find('.standing');
+
+		foreach ($rows as $row){
+
+			$teams_stats[] = [
+				"team" => $row->find('.team-name a', 0)->plaintext,
+				"games" => $row->find('.standing-games_played', 0)->plaintext,
+				"wins" => $row->find('.standing-win', 0)->plaintext,
+				"draws" => $row->find('.standing-draw', 0)->plaintext,
+				"looses" => $row->find('.standing-lost', 0)->plaintext,
+				"goals" => $row->find('.standing-goaldiff', 0)->plaintext,
+				"points" => $row->find('.standing-points', 0)->plaintext
+			];
+		}
+
+		return $teams_stats;
+	}
+
+
 	function crawlGameday($gameday) {
 
 		$url = "https://www.sport.de/widget_gameplan_round-matchday/sp1/se35753/co12/ro109214/md" . $gameday;
@@ -43,6 +80,7 @@ class Crawler
 		return $gameday_arr;
 	}
 
+
 	function crawlLastResults($team) {
 
 		$fcb_url = "https://www.sport.de/fussball/te209/bayern-muenchen/spiele-und-ergebnisse/";
@@ -58,11 +96,6 @@ class Crawler
 		return $results;
 	}
 
-	function crawlTable($gameday) {
-		$table_url = "https://www.sport.de/widget_standing_round-matchday/ro109214/md" . $gameday;
 
-		$html = HtmlDomParser::file_get_html($table_url);
-
-	}
 
 }

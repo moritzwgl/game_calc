@@ -10,83 +10,90 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Games
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+	/**
+	 * @ORM\Id
+	 * @ORM\GeneratedValue
+	 * @ORM\Column(type="integer")
+	 */
+	private $id;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $gameday;
+	/**
+	 * @ORM\Column(type="integer")
+	 */
+	private $gameday_id;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $home;
+	/**
+	 * @ORM\Column(type="integer")
+	 */
+	private $home_id;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $away;
+	/**
+	 * @ORM\Column(type="integer")
+	 */
+	private $away_id;
 
-    /**
-     * @ORM\Column(type="string")
-     */
-    private $result;
+	/**
+	 * @ORM\Column(type="string")
+	 */
+	private $result;
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
+	public function getId(): ?int {
+		return $this->id;
+	}
 
-    public function getGameday(): ?int
-    {
-        return $this->gameday;
-    }
+	/**
+	 * @return integer
+	 */
+	public function getGamedayId() {
+		return $this->gameday_id;
+	}
 
-    public function setGameday(int $gameday): self
-    {
-        $this->gameday = $gameday;
+	/**
+	 * @param integer $gameday_id
+	 */
+	public function setGamedayId($gameday_id): void {
+		$this->gameday_id = $gameday_id;
+	}
 
-        return $this;
-    }
+	/**
+	 * @return integer
+	 */
+	public function getHomeId() {
+		return $this->home_id;
+	}
 
-    public function getHome(): ?string
-    {
-        return $this->home;
-    }
+	/**
+	 * @param integer $home_id
+	 */
+	public function setHomeId($home_id): void {
+		$this->home_id = $home_id;
+	}
 
-    public function setHome(string $home): self
-    {
-        $this->home = $home;
+	/**
+	 * @return integer
+	 */
+	public function getAwayId() {
+		return $this->away_id;
+	}
 
-        return $this;
-    }
+	/**
+	 * @param integer $away_id
+	 */
+	public function setAwayId($away_id): void {
+		$this->away_id = $away_id;
+	}
 
-    public function getAway(): ?string
-    {
-        return $this->away;
-    }
+	/**
+	 * @return string
+	 */
+	public function getResult() {
+		return $this->result;
+	}
 
-    public function setAway(string $away): self
-    {
-        $this->away = $away;
-
-        return $this;
-    }
-
-    public function getResult(): ?string
-    {
-        return $this->result;
-    }
-
-    public function setResult(string $result): self
-    {
-        $this->result = $result;
-
-        return $this;
-    }
+	/**
+	 * @param string $result
+	 */
+	public function setResult($result): void {
+		$this->result = $result;
+	}
 }
