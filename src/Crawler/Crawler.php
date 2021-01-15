@@ -43,12 +43,9 @@ class Crawler
 		return $teams_stats;
 	}
 
+	function crawlGameday($url, $gameday){
 
-	function crawlGameday($gameday) {
-
-		$url = "https://www.sport.de/widget_gameplan_round-matchday/sp1/se35753/co12/ro109214/md" . $gameday;
-
-		$html = HtmlDomParser::file_get_html($url);
+		$html = HtmlDomParser::file_get_html($url . $gameday);
 
 		$date = $html->find('.match-date', 0)->plaintext;
 		$date = explode(" ", $date)[0];
@@ -56,28 +53,38 @@ class Crawler
 		$week = $date->format("W");
 		$year = $date->format("Y");
 
-		$gameday_arr["gameday_info"] = [
-			"date" => $week . "/" . $year
+		$gameday_arr = [
+			"gameday" => $gameday,
+			"date" =>  $week . "/" . $year
 		];
 
-		$games = $html->find('.match');
-		foreach ($games as $game) {
-
-			$home = $game->find('.team-name-home', 0)->plaintext;
-			$away = $game->find('.team-name-away', 0)->plaintext;
-			$result = $game->find('.match-result.match-result-0 a', 0)->plaintext;
+		return $gameday_arr;
+	}
 
 
-			$games_arr[] = [
+	function crawlGamedayGames($url, $gameday) {
+
+		$html = HtmlDomParser::file_get_html($url . $gameday);
+
+		$rows = $html->find('.match');
+
+		$gameday = $html->find('.match-round', 0)->plaintext;
+
+		foreach ($rows as $row) {
+
+			$home = $row->find('.team-name-home', 0)->plaintext;
+			$away = $row->find('.team-name-away', 0)->plaintext;
+			$result = $row->find('.match-result.match-result-0 a', 0)->plaintext;
+
+			$games[] = [
+				"gameday" => $gameday,
 				"home" => $home,
 				"away" => $away,
 				"result" => $result
 			];
 		}
 
-		$gameday_arr["games"] = $games_arr;
-
-		return $gameday_arr;
+		return $games;
 	}
 
 

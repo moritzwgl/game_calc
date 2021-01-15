@@ -56,7 +56,7 @@ class IndexController extends AbstractController
 
 		$overall_stats = $this->math->getOverallStats($games, $team);
 
-		$overall_stats["win_percentage"] = ($this->math->getwinningChance($overall_stats)*100);
+		$overall_stats["win_percentage"] = ($this->math->getwinningChance($overall_stats) * 100);
 
 		return $this->render('team.html.twig', [
 			"gamedays" => $this->gamedays,
@@ -74,7 +74,7 @@ class IndexController extends AbstractController
 
 		$crawler = new Crawler();
 
-		if ($action === "teams"){
+		if ($action === "teams") {
 
 			$table_url = "https://www.sport.de/widget_standing_round-matchday/ro109214/md";
 			$teams = $crawler->crawlTeams($table_url);
@@ -84,17 +84,46 @@ class IndexController extends AbstractController
 			return $this->redirectToRoute('crawler', [], 301);
 		}
 
-		if ($action === "teams_stats"){
+		if ($action === "teams_stats") {
 
 			$table_url = "https://www.sport.de/widget_standing_round-matchday/ro109214/md";
 			$teams_stats = $crawler->crawlTeamsStats($table_url);
 
-			$this->gamedayService->saveTeamStats($teams_stats);
+			$this->gamedayService->saveTeamsStats($teams_stats);
 
 			return $this->redirectToRoute('crawler', [], 301);
 		}
 
-		if ($action == ""){
+		if ($action === "gameday") {
+
+			$gameday_url = "https://www.sport.de/widget_gameplan_round-matchday/sp1/se35753/co12/ro109214/md";
+
+			for ($i = 1; $i <= 34; $i++) {
+
+				$gameday_arr = $crawler->crawlGameday($gameday_url, $i);
+
+				$this->gamedayService->saveGameday($gameday_arr);
+			}
+
+			return $this->redirectToRoute('crawler', [], 301);
+		}
+
+		if ($action === "games") {
+
+			$gameday_url = "https://www.sport.de/widget_gameplan_round-matchday/sp1/se35753/co12/ro109214/md";
+
+			for ($i = 1; $i <= 34; $i++) {
+
+				$games = $crawler->crawlGamedayGames($gameday_url, $i);
+
+				$this->gamedayService->saveGames($games);
+			}
+
+			return $this->redirectToRoute('crawler', [], 301);
+		}
+
+
+		if ($action == "") {
 			return $this->render('crawler/crawler.html.twig', [
 				"gamedays" => $this->gamedays,
 				"message" => ""

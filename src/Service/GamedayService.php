@@ -29,7 +29,7 @@ class GamedayService extends AbstractController
 	}
 
 	// Holt sich anhand des Teamnames die team_id aus der Tabelle teams und speichert diese mit den Statistiken in die Tabelle team_stats
-	public function saveTeamStats($teams_stats) {
+	public function saveTeamsStats($teams_stats) {
 
 		$entityManager = $this->getDoctrine()->getManager();
 
@@ -58,29 +58,20 @@ class GamedayService extends AbstractController
 		}
 	}
 
-
-	public function saveAllGamedays(Crawler $crawler) {
+	// Speichert den Spieltag in die Datenbank
+	public function saveGameday($gameday_arr) {
 
 		$entityManager = $this->getDoctrine()->getManager();
 
-		$last_gameday = 34;
+		$gameday = new Gameday();
+		$gameday->setGameday($gameday_arr["gameday"]);
+		$gameday->setDate($gameday_arr["date"]);
 
-		for ($i = 1; $i <= $last_gameday; $i++) {
-
-			$gameday_info = $crawler->crawlGameday($i);
-
-			$gameday = new Gameday();
-			$gameday->setGameday($i);
-			$gameday->setDate($gameday_info["gameday_info"]["date"]);
-
-			$this->saveAllGames($gameday_info["games"], $i);
-
-			$entityManager->persist($gameday);
-			$entityManager->flush();
-		}
+		$entityManager->persist($gameday);
+		$entityManager->flush();
 	}
 
-	public function saveAllGames($games, $gameday) {
+	public function saveGames($games) {
 
 		$entityManager = $this->getDoctrine()->getManager();
 
@@ -92,10 +83,28 @@ class GamedayService extends AbstractController
 				$result = "";
 			}
 
+			$home = $this->getDoctrine()
+				->getRepository(Teams::class)
+				->findBy(["name" => $game["home"]]);
+			$home_id = $home[0]->getId();
+
+			$away = $this->getDoctrine()
+				->getRepository(Teams::class)
+				->findBy(["name" => $game["away"]]);
+			$away_id = $away[0]->getId();
+
+
+			$gameday_num = explode(".", $game["gameday"])[0];
+
+			$gameday = $this->getDoctrine()
+				->getRepository(Gameday::class)
+				->findBy(["gameday" => $gameday_num]);
+			$gameday_id = $gameday[0]->getId();
+
 			$games = new Games();
-			$games->setGamedayId($gameday);
-			$games->setHomeId($game["home"]);
-			$games->setAwayId($game["away"]);
+			$games->setGamedayId($gameday_id);
+			$games->setHomeId($home_id);
+			$games->setAwayId($away_id);
 			$games->setResult($result);
 
 			$entityManager->persist($games);
